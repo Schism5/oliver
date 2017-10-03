@@ -52,7 +52,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-    if(req.body.pw === 'ok') {
+    if(req.body.pw === 'oliveboo') {
         res.send(fs.readdirSync(__dirname + '/images'));
     }
     else {
