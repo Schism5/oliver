@@ -1,8 +1,11 @@
 const express = require('express');
+const parser = require('body-parser');
 const hbs = require('hbs');
 const fs = require('fs');
 
 const app = express();
+app.use(parser.urlencoded({ extended: false }));
+app.use(parser.json());
 
 app.set('view engine', 'hbs');
 
@@ -42,13 +45,20 @@ app.get('/images/*', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    var names = fs.readdirSync(__dirname + '/images');
-    res.render('home.hbs', {
-        title: 'Home Page',
-        welcomeMessage: 'yo dawg!',
-        imageNames : names,
-        currentYear: new Date().getFullYear(),
-    });
+    // res.render('home.hbs', {
+    //     imageNames : fs.readdirSync(__dirname + '/images')
+    // });
+    res.render('login.hbs');
+});
+
+app.post('/login', (req, res) => {
+    if(req.body.pw === 'ok') {
+        res.send(fs.readdirSync(__dirname + '/images'));
+    }
+    else {
+        res.status(403);
+        res.send();
+    }
 });
 
 app.get('/about', (req, res) => {

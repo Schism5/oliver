@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+       <meta charset="utf-8">
+       <title>Oliver</title>
+    </head>
+    <body>
+        <input type="password" width="150" id="pw">
+        <button id="btn">Submit</button>
+        <script>
+            var input = document.getElementById('pw');
+            var btn = document.getElementById('btn');
+
+            input.onkeydown = function(event) {
+                if(event.key.toLowerCase() === 'enter' || event.keyCode === 13) {
+                    var req = new XMLHttpRequest();
+                    req.open('POST', '/login', true);
+                    req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+                    req.onload = function() {
+                        if(req.status >= 200 && req.status < 400) {
+                            input.style.display = 'none';
+                            btn.style.display = 'none';
+                            var imgNames = JSON.parse(req.responseText);
+                            imgNames.forEach(function(name) {
+                                var img = document.createElement('img');
+                                img.src = '/images/' + name;
+                                document.body.appendChild(img);
+                            });
+                        }
+                    };
+                    req.send(encodeURI("pw=" + input.value));
+                }
+            };
+        </script>
+    </body>
+</html>
