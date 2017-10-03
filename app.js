@@ -6,6 +6,7 @@ const app = express();
 
 app.set('view engine', 'hbs');
 
+//logger
 app.use((req, res, next) => {
     let now = new Date().toString();
     let log = `${now}: ${req.method} ${req.url}`;
@@ -28,11 +29,25 @@ app.use((req, res, next) => {
 //middlewares execute in order added, make static stuff 'private' by having it here
 app.use(express.static(__dirname + '/public'));
 
+app.get('/images/*', (req, res) => {
+    var s = fs.createReadStream(__dirname + req.path);
+    s.on('open', function () {
+        //res.set('Content-Type', 'image/jpeg');
+        s.pipe(res);
+    });
+    s.on('error', function () {
+        res.set('Content-Type', 'text/plain');
+        res.status(404).end('Not found');
+    });
+});
+
 app.get('/', (req, res) => {
+    var names = fs.readdirSync(__dirname + '/images');
     res.render('home.hbs', {
         title: 'Home Page',
         welcomeMessage: 'yo dawg!',
-        currentYear: new Date().getFullYear()
+        imageNames : names,
+        currentYear: new Date().getFullYear(),
     });
 });
 
