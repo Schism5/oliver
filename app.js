@@ -4,6 +4,8 @@ const hbs = require('hbs');
 const fs = require('fs');
 
 const app = express();
+const port = process.env.PORT || 3000;
+
 app.use(parser.urlencoded({ extended: false }));
 app.use(parser.json());
 
@@ -74,6 +76,6 @@ app.get('/bad', (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log('Server Up');
+app.listen(port, () => {
+    console.log(`Server up on port ${port}`);
 });
